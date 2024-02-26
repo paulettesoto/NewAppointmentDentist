@@ -32,14 +32,14 @@ import {RespuestasComponent} from './patient/respuestas/respuestas.component';
 
 const routes: Routes = [
   //{ path: "", component: AppComponent, pathMatch: "full" },
-  { path: "", component: LoginComponent, pathMatch: "full" },
+  { path: "", component: NewAppointmentComponent, pathMatch: "full" },
   { path: "login", component: LoginComponent, pathMatch: "full"},
   { path: "register", component: RegisterComponent, pathMatch: "full"},
   
   //doctor
   { path: "profile/editprofile", component: EditProfileComponent, pathMatch: "full", canActivate: [AuthGuard]},
   { path: "profile/updatepassword", component: UpdatepasswordComponent, pathMatch: "full" , canActivate: [AuthGuard]},
-  { path: "schedule/newappointment", component: NewAppointmentComponent, pathMatch: "full" , canActivate: [AuthGuard]},
+  { path: "schedule/newappointment", component: NewAppointmentComponent, pathMatch: "full"},
   { path: "schedule/scheduleview", component: ScheduleViewComponent, pathMatch: "full" , canActivate: [AuthGuard]},
   { path: "patients/patientslist", component: PatientslistComponent, pathMatch: "full" , canActivate: [AuthGuard]},
   { path: "reviews", component: ReviewsComponent, pathMatch: "full" , canActivate: [AuthGuard]},

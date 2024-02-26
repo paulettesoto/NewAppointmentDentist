@@ -37,6 +37,7 @@ export class NewAppointmentComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.storage.clearAllDataItems();
     this.tratamientos();
   }
   
@@ -44,7 +45,7 @@ export class NewAppointmentComponent implements OnInit {
     const url = 'https://doctorappbackend-wpqd.onrender.com/schedules/availableDates';
 
     const params = new HttpParams()
-      .set('idDoctor', this.storage.getDataItem('user'))
+      .set('idDoctor', 19)
       .set('fecha',this.formatdate(this.date) );
       this.http.get(url, { params }).subscribe(
         (response: any) => {
@@ -100,7 +101,7 @@ export class NewAppointmentComponent implements OnInit {
     const url = 'https://doctorappbackend-wpqd.onrender.com/treatments/treatments';
 
     const params = new HttpParams()
-      .set('idDoctor', this.storage.getDataItem('user'));
+      .set('idDoctor', 19);
       this.http.get(url, { params }).subscribe(
         (response: any) => {
           if (response && response.treatments) {
@@ -128,7 +129,7 @@ export class NewAppointmentComponent implements OnInit {
     }else{
 
     
-      const url = `https://doctorappbackend-wpqd.onrender.com/dates/setDate?celular=${this.phonenumber}&correo=${this.email}&Nombre=${this.name}&PrimerApe=${this.lastname}&SegundoApe=${this.lastname2}&idTratamiento=${this.treatment}&idDoctor=${this.storage.getDataItem('user')}&edad=${this.age}&fechanac=${this.formatdate(this.datebirth)}&fecha=${this.formatdate(this.date)}&hora=${String(this.formatHora(this.selectedHour))}`;
+      const url = `https://doctorappbackend-wpqd.onrender.com/dates/setDate?celular=${this.phonenumber}&correo=${this.email}&Nombre=${this.name}&PrimerApe=${this.lastname}&SegundoApe=${this.lastname2}&idTratamiento=${this.treatment}&idDoctor=19&edad=${this.age}&fechanac=${this.formatdate(this.datebirth)}&fecha=${this.formatdate(this.date)}&hora=${String(this.formatHora(this.selectedHour))}`;
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'accept': 'application/json'
@@ -142,9 +143,14 @@ export class NewAppointmentComponent implements OnInit {
           text: 'Cita agregada',
           icon: 'success',
         
-        })
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Si el usuario hace clic en "Aceptar", cierra la ventana
+            window.close();
+          }
+        });
         //alert("Cita agregada");
-        this.route.navigate(['/schedule/scheduleview']);
+        //this.route.navigate(['/schedule/scheduleview']);
         this.phonenumber='';
         this.name='';
         this.lastname='';
