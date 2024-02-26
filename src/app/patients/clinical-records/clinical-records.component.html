@@ -1,17 +1,39 @@
 <div class="content">
     <h3>Historia Clinica</h3>
-    <button class="btn btn-danger pdf" (click)="generatePDF()">Generar PDF</button>
+
     <div class="preguntas" *ngIf="flag !== 2; else elseBlock">
-        <div class="questions" *ngFor="let record of clinicalRecords">
-            <label>{{ record.pregunta }}</label>
-            <textarea clrTextarea [(ngModel)]="record.respuesta" name="respuesta" required></textarea>
-        </div>
-        <button class="btn btn-danger" (click)="enviarRespuestas()">Enviar Respuestas</button>
+        <form (submit)="enviarRespuestas()">
+            <div class="grid">
+                <!-- Campo de pregunta y respuesta -->
+                <div class="records" *ngFor="let record of clinicalRecords.slice((page - 1) * paged, page * paged)">
+                    <label [for]="record.id">{{ record.pregunta }}</label>
+                    <clr-input-container>
+                        <label class="clr-sr-only">Respuesta</label>
+                        <input type="text" [id]="record.id" autocomplete="respuesta" name="respuesta" clrInput placeholder="Respuesta" [(ngModel)]="record.respuesta" />
+                    </clr-input-container>
+                </div>
+
+            </div>
+
+
+
+            <button type="submit" class="btn btn-danger" *ngIf="page == pages;">Enviar Respuestas</button>
+        </form>
     </div>
     <ng-template #elseBlock>
-        <div class="anwers" *ngFor="let record of clinicalRecordsAnswers">
-            <label>{{ record.pregunta }}</label>
-            <label>{{ record.respuesta }}</label>
+        <button class=" btn btn-danger pdf " (click)="generatePDF() ">Generar PDF</button>
+        <div class="grid">
+            <div class="answers " *ngFor="let record of clinicalRecordsAnswers ">
+                <label>{{ record.pregunta }}</label>
+                <br>
+                <label>{{ record.respuesta }}</label>
+            </div>
+
         </div>
+
     </ng-template>
+    <div class="pages ">
+        <i class="fi fi-br-arrow-left " (click)="paginador(-1) "></i> {{ page }} de {{ pages }}
+        <i class="fi fi-br-arrow-right " (click)="paginador(1) "></i>
+    </div>
 </div>

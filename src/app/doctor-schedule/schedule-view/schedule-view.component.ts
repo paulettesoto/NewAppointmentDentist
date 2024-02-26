@@ -77,6 +77,33 @@ export class ScheduleViewComponent implements OnInit {
         );
   
   }
+  verificarFechaPasada(fechaAComparar:any, hour:any): boolean {
+    const fechaActual: Date = new Date();
+    const year = fechaActual.getFullYear(); // Obtener el año
+    const month = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Obtener el mes (se suma 1 porque los meses comienzan desde 0)
+    const day = fechaActual.getDate().toString().padStart(2, '0'); // Obtener el día
+
+    const fechaEnFormatoAAAAMMDD = `${year}-${month}-${day}`;
+    const hours = fechaActual.getHours().toString().padStart(2, '0'); // Obtener la hora (asegurando que tenga dos dígitos)
+    const minutes = fechaActual.getMinutes().toString().padStart(2, '0'); // Obtener los minutos (asegurando que tenga dos dígitos)
+
+    const horaEnFormatoHHMM = `${hours}:${minutes}`;
+    console.log(fechaAComparar)
+    console.log(fechaEnFormatoAAAAMMDD)
+    console.log(hour)
+      console.log(horaEnFormatoHHMM)
+    if (fechaAComparar < fechaEnFormatoAAAAMMDD) {
+      console.log(fechaAComparar)
+      console.log(fechaEnFormatoAAAAMMDD)
+      return true;
+    } else if (hour< horaEnFormatoHHMM) {
+      console.log(hours)
+      console.log(horaEnFormatoHHMM)
+      return true;
+    } else {
+      return false;
+    }
+  }
   formatdate(date:string ):string{
     const dateObj = new Date(date);
 
@@ -137,9 +164,30 @@ export class ScheduleViewComponent implements OnInit {
   
 
   }
-  message(paciente:any, fecha:any, hora:any, dr:any, idcita:any, celular:any){
+  calificar(celular:any){
+    const encodeurl = encodeURI(`https://commentsdentistapp.onrender.com`)
+    const msg = `¡Hola!, Califica tu visita ${encodeurl}.`;
+    const url = `https://doctorappbackend-wpqd.onrender.com/sendMessage/sendMessage?phoneN=${celular}&text=${msg}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'accept': 'application/json'
+     });
+    // Realiza la solicitud POST
+    this.http.post(url, {headers}).subscribe(
+      (response: any) => {
+        console.log('Solicitud POST exitosa:', response);
+        window.open(response.success, '_blank');
+      },
+      (error) => {
+        console.error('Error en la solicitud POST:', error);
+      }
+    );
+
+  }
+  message(idpaciente:any, paciente:any, fecha:any, hora:any, dr:any, idcita:any, celular:any){
     const encodeurl = encodeURI(`https://doctorappbackend-wpqd.onrender.com/dates/confirmAppointment?idCita=${idcita}`)
-    const msg = `¡Hola ${paciente}! Te recuerdo tu cita el dia ${fecha} a las ${this.formatHora(hora)} con Dr. ${dr}. En caso de cancelacion o quieras reagendar tu cita, favor de contactarnos con anticipacion. Excelente dia. Confirma tu cita dando click al siguiente enlace ${encodeurl}`;
+    const encodeurl2 = encodeURI(`https://clinicalrecorddentistapp.onrender.com?id=${idpaciente}`)
+    const msg = `¡Hola ${paciente}! Te recuerdo tu cita el dia ${fecha} a las ${this.formatHora(hora)} con Dra. ${dr}. En caso de cancelacion o quieras reagendar tu cita, favor de contactarnos con anticipacion. Excelente dia. Confirma tu cita dando click al siguiente enlace ${encodeurl}. Contesta las siguientes preguntas con tus datos reales ${encodeurl2}.`;
     const url = `https://doctorappbackend-wpqd.onrender.com/sendMessage/sendMessage?phoneN=${celular}&text=${msg}`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

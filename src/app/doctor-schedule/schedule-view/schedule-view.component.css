@@ -33,6 +33,13 @@
     /* Añadido para ajustar el tamaño del texto */
 }
 
+.calificar {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 6rem;
+    margin: -25% 0 0 65%;
+}
+
 p {
     margin: 0;
 }

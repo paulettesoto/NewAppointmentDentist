@@ -1,21 +1,22 @@
-
 .grid {
     display: grid;
     width: 90%;
     grid-template-columns: repeat(2, 1fr);
     height: 500px;
 }
-.comments{
-    background-color: var(--cds-alias-utility-light-blue-tint);
+
+.comments {
+    background-color: var(--cds-alias-status-danger-tint);
     margin: 5% 0 2% 2%;
     width: 400px;
     height: 130px;
     border-radius: 2rem;
     padding: 1rem;
-    box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-info) ;  
-    -webkit-box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-info);
-    -moz-box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-info) ;
+    box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-danger-shade);
+    -webkit-box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-danger-shade);
+    -moz-box-shadow: .2rem .2rem .5rem 0rem var(--cds-alias-status-danger-shade);
 }
-.star{
+
+.star {
     margin: 0;
 }

@@ -15,17 +15,24 @@
         <div class="cita" *ngFor="let date of dates.slice((page - 1) * paged, page * paged)" id="{{date.id}}">
 
             <p>{{date.fecha}} Hora: {{formatHora(date.hora)}}</p>
-            <p>Paciente: {{date.Nombre}}</p>
+            <p>Paciente: {{date.Nombre}} {{date.PrimerApe}} </p>
             <p>Tratamiento:{{date.tratamiento}}</p>
-            <ng-container *ngIf="date.confirmada === 0; else confirmadaTemplate">
-                <p id="confirmacion">No Confirmada</p>
-                <button id="message" class="btn btn-success-outline btn-sm" (click)="message(date.Nombre,date.fecha,date.hora, date.Doctor,date.id,date.Celular)">Recordatorio</button>
-            </ng-container>
 
-            <ng-template #confirmadaTemplate>
-                <p id="confirmacion">Confirmada</p>
+
+            <div class="calificar" *ngIf="verificarFechaPasada(date.fecha,formatHora(date.hora)); else fechaNoPasada">
+                <button id="Calificar" class="btn btn-success-outline btn-sm" (click)="calificar(date.Celular)">Calificar</button>
+            </div>
+            <ng-template #fechaNoPasada>
+                <ng-container *ngIf="date.confirmada === 0; else confirmadaTemplate">
+                    <p id="confirmacion">No Confirmada</p>
+                    <button id="message" class="btn btn-success-outline btn-sm" (click)="message(date.idPaciente,date.Nombre,date.fecha,date.hora, date.Doctor,date.id,date.Celular)">Recordatorio</button>
+                </ng-container>
+
+                <ng-template #confirmadaTemplate>
+                    <p id="confirmacion">Confirmada</p>
+                </ng-template>
+                <button id="cancel" class="btn btn-danger-outline btn-sm" (click)="canceldate(date.id)">Cancelar</button>
             </ng-template>
-            <button id="cancel" class="btn btn-danger-outline btn-sm" (click)="canceldate(date.id)">Cancelar</button>
 
         </div>
 

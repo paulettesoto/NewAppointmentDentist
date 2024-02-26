@@ -1,4 +1,14 @@
+.pdf {
+    margin: auto 0 0 70%;
+}
 
-.pdf{
-  margin: auto 0 0 70%;
+.grid {
+    display: grid;
+    width: 90%;
+    grid-template-columns: repeat(2, 1fr);
+    height: 500px;
+}
+
+input {
+    width: 20rem;
 }

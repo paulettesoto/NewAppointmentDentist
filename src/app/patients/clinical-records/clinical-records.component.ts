@@ -19,20 +19,42 @@ export class ClinicalRecordsComponent implements OnInit {
   apellido1:string;
   apellido2:string;
   idPacient:string;
+  edad:string;
+  fechaNac:string;
+  celular:string;
+  page=1;
+  pages=1;
+  paged=14;
+  respuestas: { idPregunta: number, respuesta: string }[] = [];
   flag:number;
   constructor(private http:HttpClient, private storage:storageService,private route:Router){
     this.idPacient=this.storage.getDataItem("idPaciente");
     this.nombre=this.storage.getDataItem("NombrePaciente");
     this.apellido1=this.storage.getDataItem("Apellido1Paciente");
     this.apellido2= this.storage.getDataItem("Apellido2Paciente");
+    this.edad=this.storage.getDataItem("edad");
+    console.log(this.edad);
+    this.fechaNac=this.storage.getDataItem("fechaNac");
+    this.celular=this.storage.getDataItem("celular");
     this.flag=0;
-
   }
  
   ngOnInit(): void {
     this.preguntas();
     this.answers()
     
+  }
+  paginador(i:number){
+    let r:Number;
+    this.page=this.page+i;
+    r=this.page;
+    if(r==0){
+      this.page=1;
+    }
+    if(r==(this.pages+1)){
+      this.page=(this.pages);
+    }
+
   }
   preguntas() {
 
@@ -44,6 +66,7 @@ export class ClinicalRecordsComponent implements OnInit {
         (response: any) => {
           if (response && response.clinicalRecords) {
             this.clinicalRecords = response.clinicalRecords;
+            this.pages=Math.ceil(this.clinicalRecords.length/this.paged);
             console.log(response.clinicalRecords);
           } else {
             console.error('Error:', response);
@@ -55,35 +78,36 @@ export class ClinicalRecordsComponent implements OnInit {
       );
   
   }
-  enviarRespuestas() {
-    this.clinicalRecords.forEach((record: any) => {
-    const url = `https://doctorappbackend-wpqd.onrender.com/clinicalRecords-answers/addAnswer?idQ=${record.id}&idDoctor=${this.storage.getDataItem('user')}&Ans=${record.respuesta}&idPaciente=${this.idPacient}&cuenta=${0}`;
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'accept': 'application/json'
-     });
-      // Realiza la solicitud POST
-        this.http.post(url, {headers}).subscribe(
-          (response: any) => {
-            console.log(response);
-            
-        // Manejar la respuesta según tus necesidades
-      },
-      (error) => {
-        console.error('Error en la solicitud POST:', error);
+ enviarRespuestas() {
+      this.clinicalRecords.forEach((record: any) => {
+        if(record.respuesta){
+          const url = `https://doctorappbackend-wpqd.onrender.com/clinicalRecords-answers/addAnswer?idQ=${record.id}&idDoctor=${this.storage.getDataItem('user')}&Ans=${record.respuesta}&idPaciente=${this.idPacient}&cuenta=${0}`;
+          const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'accept': 'application/json'
+       });
+        // Realiza la solicitud POST
+          this.http.post(url, {headers}).subscribe(
+            (response: any) => {
+              console.log(response);
+              
+          // Manejar la respuesta según tus necesidades
+        },
+        (error) => {
+          console.error('Error en la solicitud POST:', error);
+        }
+      );
       }
-    );
-  });
-  Swal.fire({
+  
+    });
+    Swal.fire({
+      
+      text: 'Respuestas enviadas',
+      icon: 'success',
     
-    text: 'Respuestas enviadas',
-    icon: 'success',
-  
-  })
-    //alert("Respuestas enviadas");
-    this.route.navigate(['/patients/patientslist']);
-  
-}
+    })
+    
+  }
 
 generatePDF() {
   const url = 'https://doctorappbackend-wpqd.onrender.com/clinicalRecords-answers/clinicalRecords-answers';
@@ -115,6 +139,8 @@ generatePDF() {
         const nombre= `${this.nombre} ${this.apellido1} ${this.apellido2}`;
         const nombre_pdf=`historial_${nombre}.pdf`;
         doc.text(`Nombre: ${nombre}`, 20, 60);
+        doc.text(`Celular: ${this.celular}`, 120, 60);
+        doc.text(`Edad: ${this.edad}`, 160, 60);
 
         let yPosition = 70;
 
@@ -153,6 +179,7 @@ answers() {
       if (response && response.clinicalRecordsAnswers) {
 
         this.clinicalRecordsAnswers = response.clinicalRecordsAnswers;
+        this.pages=Math.ceil(this.clinicalRecordsAnswers.length/this.paged);
         console.log(response.clinicalRecordsAnswers);
         this.flag=2;
         
